@@ -57,7 +57,7 @@ const cards = [
 
 const W = 600, H = 340, PAD = 12; // kaartje 600x340, export op 2x = 1248x728 px
 
-const page = (inner, focused) => `<!doctype html><html><head><style>
+const page = (inner, focused, plain) => `<!doctype html><html><head><style>
 ${fontCss}
 html,body{margin:0;background:transparent}
 .wrap{padding:${PAD}px;display:inline-block}
@@ -70,6 +70,7 @@ html,body{margin:0;background:transparent}
   box-shadow: inset 0 2px 0 rgba(255,255,255,.18), 0 10px 24px rgba(10,20,70,.35);
   text-shadow:0 2px 6px rgba(0,0,30,.25);
 }
+${plain ? '.card{background:none!important;box-shadow:none!important;border-color:' + (focused ? '#fff' : 'transparent') + '!important}' : ''}
 </style></head><body><div class="wrap"><div class="card">${inner}</div></div></body></html>`;
 
 (async () => {
@@ -77,13 +78,17 @@ html,body{margin:0;background:transparent}
   fs.mkdirSync(out, { recursive: true });
   const browser = await chromium.launch();
   const p = await browser.newPage({ deviceScaleFactor: 2 });
+  // PLAIN=1 node make_cards.js  -> versie zonder blauwe achtergrond (map output/transparent)
+  const plain = process.env.PLAIN === '1';
+  const dir = plain ? path.join(out, 'transparent') : out;
+  fs.mkdirSync(dir, { recursive: true });
   for (const c of cards) {
     for (const focused of [false, true]) {
-      await p.setContent(page(c.html, focused), { waitUntil: 'load' });
+      await p.setContent(page(c.html, focused, plain), { waitUntil: 'load' });
       await p.evaluate(() => document.fonts.ready);
       const el = await p.$('.wrap');
       const name = `${c.file}${focused ? '-focused' : ''}.png`;
-      await el.screenshot({ path: path.join(out, name), omitBackground: true });
+      await el.screenshot({ path: path.join(dir, name), omitBackground: true });
       console.log('✓', name);
     }
   }
