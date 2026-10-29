@@ -80,7 +80,7 @@ ${plain ? '.card{background:none!important;box-shadow:none!important;border-colo
   const p = await browser.newPage({ deviceScaleFactor: 2 });
   // PLAIN=1 node make_cards.js  -> versie zonder blauwe achtergrond (map output/transparent)
   const plain = process.env.PLAIN === '1';
-  const dir = plain ? path.join(out, 'transparent') : out;
+  const dir = path.join(out, plain ? 'transparent' : 'blue');
   fs.mkdirSync(dir, { recursive: true });
   for (const c of cards) {
     for (const focused of [false, true]) {

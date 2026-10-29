@@ -2,10 +2,10 @@
 
 Genre-kaartjes als transparante PNG's (1248×728). Elk genre heeft een gewone en een `-focused` versie (witte rand).
 
-![preview](preview.png)
+![preview](blue/preview.png)
 
-Directe link naar een kaartje:
-`https://raw.githubusercontent.com/VeranuVW/genre-cards/main/<naam>.png`
+
+`https://raw.githubusercontent.com/VeranuVW/genre-cards/main/blue/<naam>.png`
 
 ## Zonder achtergrond
 
